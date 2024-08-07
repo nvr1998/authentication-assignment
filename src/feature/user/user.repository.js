@@ -16,3 +16,11 @@ export const updateUserPassword = async (email, newPassword) => {
     { new: true }
   );
 };
+
+export const updateUserResetToken = async (email, otp, expiry) => {
+  return await User.findOneAndUpdate(
+    { email },
+    { resetToken: otp, resetTokenExpiry: expiry },
+    { new: true }
+  );
+};

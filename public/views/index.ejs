@@ -3,29 +3,409 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In</title>
-    <link rel="stylesheet" href="../css/styles.css" />
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <title>Authentication System</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .alert-custom {
+        margin-top: 20px;
+      }
+      .status-bar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        margin: 20px;
+        z-index: 1000;
+      }
+    </style>
   </head>
   <body>
-    <header>
-      <h1>Sign In</h1>
-    </header>
-    <main>
-      <form id="sign-in-form">
-        <label for="email">Email:</label>
-        <input type="email" id="email" required />
+    <div class="container mt-5">
+      <div class="status-bar">
+        <div id="user-status" class="alert alert-info" role="alert">
+          Logged out
+          <button
+            id="logout-btn"
+            class="btn btn-danger btn-sm float-right"
+            style="display: none"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" required />
+      <ul class="nav nav-tabs" id="auth-tabs" role="tablist">
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            id="signup-tab"
+            data-toggle="tab"
+            href="#signup"
+            role="tab"
+            >Sign Up</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="signin-tab"
+            data-toggle="tab"
+            href="#signin"
+            role="tab"
+            >Sign In</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="update-password-tab"
+            data-toggle="tab"
+            href="#update-password"
+            role="tab"
+            >Update Password</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="forgot-password-tab"
+            data-toggle="tab"
+            href="#forgot-password"
+            role="tab"
+            >Forgot Password</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="verify-otp-tab"
+            data-toggle="tab"
+            href="#verify-otp"
+            role="tab"
+            >Verify OTP</a
+          >
+        </li>
+      </ul>
 
-        <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+      <div class="tab-content mt-3">
+        <!-- Sign Up Tab -->
+        <div class="tab-pane fade show active" id="signup" role="tabpanel">
+          <h2>Sign Up</h2>
+          <form id="signup-form">
+            <div class="form-group">
+              <label for="signup-email">Email address</label>
+              <input
+                name="email"
+                type="email"
+                class="form-control"
+                id="signup-email"
+                placeholder="Enter email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="signup-password">Password</label>
+              <input
+                name="password"
+                type="password"
+                class="form-control"
+                id="signup-password"
+                placeholder="Password"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+            <div
+              class="alert alert-danger alert-custom"
+              id="signup-error"
+              style="display: none"
+            ></div>
+            <div
+              class="alert alert-success alert-custom"
+              id="signup-success"
+              style="display: none"
+            ></div>
+          </form>
+        </div>
 
-        <button type="submit">Sign In</button>
-      </form>
-      <div id="sign-in-message"></div>
-      <a href="forgot-password.html">Forgot Password?</a>
-    </main>
-    <script src="../js/app.js"></script>
+        <!-- Sign In Tab -->
+        <div class="tab-pane fade" id="signin" role="tabpanel">
+          <h2>Sign In</h2>
+          <form id="signin-form">
+            <div class="form-group">
+              <label for="signin-email">Email address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="signin-email"
+                placeholder="Enter email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="signin-password">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="signin-password"
+                placeholder="Password"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+            <div
+              class="alert alert-danger alert-custom"
+              id="signin-error"
+              style="display: none"
+            ></div>
+            <div
+              class="alert alert-success alert-custom"
+              id="signin-success"
+              style="display: none"
+            ></div>
+          </form>
+        </div>
+
+        <!-- Update Password Tab -->
+        <div class="tab-pane fade" id="update-password" role="tabpanel">
+          <h2>Update Password</h2>
+          <form id="update-password-form">
+            <div class="form-group">
+              <label for="update-email">Email address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="update-email"
+                placeholder="Enter email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="new-password">New Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="new-password"
+                placeholder="New Password"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="auth-token">Authorization Token</label>
+              <input
+                type="text"
+                class="form-control"
+                id="auth-token"
+                placeholder="Enter token"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Update Password
+            </button>
+            <div
+              class="alert alert-danger alert-custom"
+              id="update-password-error"
+              style="display: none"
+            ></div>
+            <div
+              class="alert alert-success alert-custom"
+              id="update-password-success"
+              style="display: none"
+            ></div>
+          </form>
+        </div>
+
+        <!-- Forgot Password Tab -->
+        <div class="tab-pane fade" id="forgot-password" role="tabpanel">
+          <h2>Forgot Password</h2>
+          <form id="forgot-password-form">
+            <div class="form-group">
+              <label for="forgot-email">Email address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="forgot-email"
+                placeholder="Enter email"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Request Password Reset
+            </button>
+            <div
+              class="alert alert-danger alert-custom"
+              id="forgot-password-error"
+              style="display: none"
+            ></div>
+            <div
+              class="alert alert-success alert-custom"
+              id="forgot-password-success"
+              style="display: none"
+            ></div>
+          </form>
+        </div>
+
+        <!-- Verify OTP Tab -->
+        <div class="tab-pane fade" id="verify-otp" role="tabpanel">
+          <h2>Verify OTP</h2>
+          <form id="verify-otp-form">
+            <div class="form-group">
+              <label for="verify-email">Email address</label>
+              <input
+                type="email"
+                class="form-control"
+                id="verify-email"
+                placeholder="Enter email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="otp">OTP</label>
+              <input
+                type="text"
+                class="form-control"
+                id="otp"
+                placeholder="Enter OTP"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="verify-new-password">New Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="verify-new-password"
+                placeholder="New Password"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Verify OTP</button>
+            <div
+              class="alert alert-danger alert-custom"
+              id="verify-otp-error"
+              style="display: none"
+            ></div>
+            <div
+              class="alert alert-success alert-custom"
+              id="verify-otp-success"
+              style="display: none"
+            ></div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Include jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+      let isLoggedIn = false;
+      let token = "";
+
+      function handleFormSubmission(
+        formId,
+        url,
+        method,
+        successMessageId,
+        errorMessageId
+      ) {
+        const form = document.getElementById(formId);
+        const errorDiv = document.getElementById(errorMessageId);
+        const successDiv = document.getElementById(successMessageId);
+
+        form.addEventListener("submit", async function (event) {
+          event.preventDefault();
+          errorDiv.style.display = "none";
+          successDiv.style.display = "none";
+
+          // Create a FormData object
+          const formData = new FormData(form);
+          // Convert FormData to a plain object
+          const data = Object.fromEntries(formData.entries());
+          console.log(data);
+          try {
+            const response = await axios({
+              method: method,
+              url: url,
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: isLoggedIn ? `Bearer ${token}` : "",
+              },
+              data: data,
+            });
+
+            if (formId === "signin-form") {
+              token = response.data.token;
+              isLoggedIn = true;
+              document.getElementById("user-status").textContent = "Logged in";
+              document.getElementById("logout-btn").style.display =
+                "inline-block";
+            } else {
+              successDiv.textContent = "Operation successful!";
+              successDiv.style.display = "block";
+            }
+          } catch (error) {
+            errorDiv.textContent = `Error: ${
+              error.response ? error.response.data.message : error.message
+            }`;
+            errorDiv.style.display = "block";
+          }
+        });
+      }
+
+      document.getElementById("logout-btn").addEventListener("click", () => {
+        isLoggedIn = false;
+        token = "";
+        document.getElementById("user-status").textContent = "Logged out";
+        document.getElementById("logout-btn").style.display = "none";
+        document.getElementById("signin-form").reset();
+        document.getElementById("signup-form").reset();
+        document.getElementById("update-password-form").reset();
+        document.getElementById("forgot-password-form").reset();
+        document.getElementById("verify-otp-form").reset();
+      });
+
+      handleFormSubmission(
+        "signup-form",
+        "/signup",
+        "POST",
+        "signup-success",
+        "signup-error"
+      );
+      handleFormSubmission(
+        "signin-form",
+        "/signin",
+        "POST",
+        "signin-success",
+        "signin-error"
+      );
+      handleFormSubmission(
+        "update-password-form",
+        "/reset-password",
+        "POST",
+        "update-password-success",
+        "update-password-error"
+      );
+      handleFormSubmission(
+        "forgot-password-form",
+        "/request-password-reset",
+        "POST",
+        "forgot-password-success",
+        "forgot-password-error"
+      );
+      handleFormSubmission(
+        "verify-otp-form",
+        "/verify-otp",
+        "POST",
+        "verify-otp-success",
+        "verify-otp-error"
+      );
+    </script>
   </body>
 </html>
